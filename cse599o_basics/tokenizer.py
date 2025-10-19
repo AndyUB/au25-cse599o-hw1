@@ -2,6 +2,8 @@ from __future__ import annotations
 from typing import Dict, List, Optional, Iterator
 import tiktoken
 
+END_OF_TEXT = "<|endoftext|>"
+
 
 class BPETokenizer:
     """

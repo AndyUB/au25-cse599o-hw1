@@ -2,12 +2,19 @@ from argparse import ArgumentParser
 import os
 import torch
 import numpy as np
+import matplotlib.pyplot as plt
 
-from tokenizer import BPETokenizer
+from tokenizer import BPETokenizer, END_OF_TEXT
 from transformer import Transformer
-from training import AdamW, load_data, lr_cosine_schedule, load_checkpoint, save_checkpoint
-
-END_OF_TEXT = "<|endoftext|>"
+from training import (
+    AdamW,
+    load_data,
+    lr_cosine_schedule,
+    load_checkpoint,
+    save_checkpoint,
+    cross_entropy_loss,
+    gradient_clipping,
+)
 
 
 def get_tokens(data_path: str, tokenizer: BPETokenizer) -> np.ndarray:
@@ -30,6 +37,81 @@ def get_tokens(data_path: str, tokenizer: BPETokenizer) -> np.ndarray:
     return np.memmap(bin_path, dtype=np.int32, mode="r")
 
 
+def eval(
+    model: Transformer,
+    val_data: np.ndarray,
+    batch_size: int,
+    max_seq_length: int,
+    device: str,
+) -> torch.Tensor:
+    """
+    Evaluate the model on the validation dataset.
+
+    Args:
+        model (Transformer): The transformer model to evaluate.
+        val_data (np.ndarray): Numpy array of validation token IDs.
+        batch_size (int): Batch size for evaluation.
+        max_seq_length (int): Maximum sequence length.
+        device (str): Device to run the evaluation on.
+
+    Returns:
+        torch.Tensor: The computed validation loss.
+    """
+    model.eval()
+    with torch.no_grad():
+        val_input_ids, val_target_ids = load_data(
+            x=val_data,
+            batch_size=batch_size,
+            context_length=max_seq_length,
+            device=device,
+        )
+        val_logits = model(val_input_ids)
+        val_loss = cross_entropy_loss(val_logits, val_target_ids)
+    return val_loss
+
+
+def save_loss_map(
+    loss_map: dict[int, tuple[float, float]],
+    filepath: str,
+) -> None:
+    """
+    Save the training and validation loss map to a file.
+
+    Args:
+        loss_map (dict[int, tuple[float, float]]): A dictionary mapping
+            epoch numbers to (training loss, validation loss) tuples.
+        filepath (str): The path to save the loss map file.
+    """
+    with open(filepath, "w") as f:
+        f.write("Epoch,Training Loss,Validation Loss\n")
+        for epoch, (train_loss, val_loss) in loss_map.items():
+            f.write(f"{epoch},{train_loss},{val_loss}\n")
+
+
+def plot_loss(loss_map: dict[int, tuple[float, float]], filepath: str) -> None:
+    """
+    Plot the training and validation loss curves and save to a file.
+
+    Args:
+        loss_map (dict[int, tuple[float, float]]): A dictionary mapping
+            epoch numbers to (training loss, validation loss) tuples.
+        filepath (str): The path to save the plot file.
+    """
+    epochs = sorted(list(loss_map.keys()))
+    train_losses = [loss[0] for loss in loss_map.values()]
+    val_losses = [loss[1] for loss in loss_map.values()]
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(epochs, train_losses, label="Training Loss")
+    plt.plot(epochs, val_losses, label="Validation Loss")
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training and Validation Loss")
+    plt.legend()
+    plt.savefig(filepath)
+    plt.close()
+
+
 def main():
     parser = ArgumentParser(description="Train a transformer model")
     parser.add_argument(
@@ -38,6 +120,7 @@ def main():
     parser.add_argument(
         "--val_data", type=str, required=True, help="Path to validation data"
     )
+    parser.add_argument("--log_dir", type=str, required=True, help="Directory for logs")
     parser.add_argument(
         "--checkpoint_dir",
         type=str,
@@ -55,6 +138,9 @@ def main():
         type=str,
         default="",
         help="Path to a checkpoint to resume training from",
+    )
+    parser.add_argument(
+        "--eval_interval", type=int, default=100, help="Evaluation interval"
     )
 
     parser.add_argument(
@@ -98,6 +184,9 @@ def main():
 
     parser.add_argument("--lr", type=float, default=1e-3, help="Learning rate")
     parser.add_argument(
+        "--enable_lr_schedule", action="store_true", help="Enable LR scheduling"
+    )
+    parser.add_argument(
         "--lr_max", type=float, default=1e-3, help="Maximum learning rate"
     )
     parser.add_argument(
@@ -125,6 +214,7 @@ def main():
     args = parser.parse_args()
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
+    print(f"Arguments: {args}")
 
     print("loading data...")
     tokenizer = BPETokenizer(vocab={}, merges=[], special_tokens=[END_OF_TEXT])
@@ -156,10 +246,14 @@ def main():
             model,
             optimizer,
         )
-        print(f"Resuming training from checkpoint {args.checkpoint_resume_path} at epoch {start_epoch}")
+        print(
+            f"Resuming training from checkpoint {args.checkpoint_resume_path} at epoch {start_epoch}"
+        )
     else:
         start_epoch = 0
         print("Starting training from epoch 0")
+
+    loss_map = {}
 
     for epoch in range(start_epoch, args.num_epochs):
         input_ids, target_ids = load_data(
@@ -168,13 +262,47 @@ def main():
             context_length=args.max_seq_length,
             device=device,
         )
+        logits = model(input_ids)
+        loss = cross_entropy_loss(logits, target_ids)
+        optimizer.zero_grad()
+        loss.backward()
+        gradient_clipping(
+            parameters=list(model.parameters()), max_norm=args.max_grad_norm
+        )
+        if args.enable_lr_schedule:
+            lr = lr_cosine_schedule(
+                epoch,
+                lr_max=args.lr_max,
+                lr_min=args.lr_min,
+                warmup_iters=args.warmup_iters,
+                cosine_iters=args.cosine_iters,
+            )
+            for param_group in optimizer.param_groups:
+                param_group["lr"] = lr
+        optimizer.step()
 
         if (epoch + 1) % args.checkpoint_interval == 0:
-            checkpoint_path = os.path.join(
-                args.checkpoint_dir, f"checkpoint_epoch_{epoch+1}.pt"
-            )
-            save_checkpoint(checkpoint_path, model, optimizer, epoch + 1)
+            checkpoint_path = os.path.join(args.checkpoint_dir, f"ckpt{epoch+1}.pt")
+            save_checkpoint(model, optimizer, epoch + 1, checkpoint_path)
             print(f"Saved checkpoint to {checkpoint_path}")
+
+        if (epoch + 1) % args.eval_interval == 0:
+            val_loss: torch.Tensor = eval(
+                model, val_data, args.batch_size, args.max_seq_length, device
+            )
+            print(
+                f"Epoch {epoch+1}, "
+                f"Training Loss: {loss.item():.4f}, "
+                f"Validation Loss: {val_loss.item():.4f}"
+            )
+            model.train()
+            loss_map[epoch + 1] = (loss.item(), val_loss.item())
+
+    loss_map_path = os.path.join(args.log_dir, "loss_map.csv")
+    save_loss_map(loss_map, loss_map_path)
+    loss_plot_path = os.path.join(args.log_dir, "loss_plot.png")
+    plot_loss(loss_map, loss_plot_path)
+
 
 if __name__ == "__main__":
     main()

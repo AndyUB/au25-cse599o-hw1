@@ -184,7 +184,7 @@ def load_data(
     input_ids = (
         torch.stack(
             [
-                torch.from_numpy(x[start : start + context_length])
+                torch.from_numpy(x[start : start + context_length].copy())
                 for start in batch_starts
             ]
         )
@@ -194,7 +194,7 @@ def load_data(
     target_ids = (
         torch.stack(
             [
-                torch.from_numpy(x[start + 1 : start + context_length + 1])
+                torch.from_numpy(x[start + 1 : start + context_length + 1].copy())
                 for start in batch_starts
             ]
         )

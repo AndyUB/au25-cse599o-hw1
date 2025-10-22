@@ -48,6 +48,20 @@ def decode(
     return tokenizer.decode(tokens.squeeze(0).tolist())
 
 
+def get_default_model(device: torch.device) -> Transformer:
+    model = Transformer(
+        vocab_size=50257,
+        num_layers=4,
+        d_model=512,
+        num_heads=16,
+        d_ff=1344,
+        context_length=256,
+        theta=10000,
+        device=torch.device(device),
+    )
+    return model
+
+
 def main():
     parser = ArgumentParser()
     parser.add_argument(
@@ -80,17 +94,9 @@ def main():
     )
 
     args = parser.parse_args()
+    print(f"Arguments: {args}")
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model = Transformer(
-        vocab_size=50257,
-        num_layers=4,
-        d_model=512,
-        num_heads=16,
-        d_ff=1344,
-        context_length=256,
-        theta=10000,
-        device=torch.device(device),
-    )
+    model = get_default_model(device=torch.device(device))
 
     checkpoint = torch.load(args.model_checkpoint)
     model.load_state_dict(checkpoint["model_state_dict"])

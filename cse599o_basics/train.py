@@ -37,36 +37,102 @@ def get_tokens(data_path: str, tokenizer: BPETokenizer) -> np.ndarray:
     return np.memmap(bin_path, dtype=np.int32, mode="r")
 
 
+def load_eval_data(
+    x: np.ndarray,
+    eval_batch_size: int,
+    context_length: int,
+    device: str,
+    num_batches: int | None = None,
+) -> tuple[list[torch.Tensor], list[torch.Tensor]]:
+    """
+    Load a batch of data for evaluation.
+
+    Args:
+        x: Numpy array of token IDs.
+        eval_batch_size (int): Number of sequences in an evaluation batch.
+        context_length (int): Length of each sequence.
+        device (str): Device to load the data onto.
+        num_batches (int | None): Number of batches to load. If None,
+            defaults to x.shape[0] // (eval_batch_size * context_length).
+
+    Returns:
+        tuple[list[torch.Tensor], list[torch.Tensor]]: A tuple containing:
+            - input_ids: List of num_batches tensors of shape
+                (eval_batch_size, context_length).
+            - target_ids: List of num_batches tensors of shape
+                (eval_batch_size, context_length).
+    """
+    num_tokens = x.shape[0]
+    device = torch.device(device)
+    if num_batches is None:
+        num_batches = num_tokens // (eval_batch_size * context_length)
+    input_ids_list = []
+    target_ids_list = []
+    for i in range(num_batches):
+        start = i * eval_batch_size * context_length
+        input_ids = (
+            torch.stack(
+                [
+                    torch.from_numpy(
+                        x[
+                            start
+                            + j * context_length : start
+                            + (j + 1) * context_length
+                        ].copy()
+                    )
+                    for j in range(eval_batch_size)
+                ]
+            )
+            .long()
+            .to(device)
+        )
+        target_ids = (
+            torch.stack(
+                [
+                    torch.from_numpy(
+                        x[
+                            start
+                            + j * context_length
+                            + 1 : start
+                            + (j + 1) * context_length
+                            + 1
+                        ].copy()
+                    )
+                    for j in range(eval_batch_size)
+                ]
+            )
+            .long()
+            .to(device)
+        )
+        input_ids_list.append(input_ids)
+        target_ids_list.append(target_ids)
+    return input_ids_list, target_ids_list
+
+
 def eval(
     model: Transformer,
-    val_data: np.ndarray,
-    batch_size: int,
-    max_seq_length: int,
-    device: str,
-) -> torch.Tensor:
+    val_input_ids: list[torch.Tensor],
+    val_target_ids: list[torch.Tensor],
+) -> float:
     """
     Evaluate the model on the validation dataset.
 
     Args:
         model (Transformer): The transformer model to evaluate.
-        val_data (np.ndarray): Numpy array of validation token IDs.
-        batch_size (int): Batch size for evaluation.
-        max_seq_length (int): Maximum sequence length.
-        device (str): Device to run the evaluation on.
+        val_input_ids (list[torch.Tensor]): List of input ID tensors.
+        val_target_ids (list[torch.Tensor]): List of target ID tensors.
 
     Returns:
-        torch.Tensor: The computed validation loss.
+        float: The average validation loss.
     """
     model.eval()
+    total_loss = 0.0
     with torch.no_grad():
-        val_input_ids, val_target_ids = load_data(
-            x=val_data,
-            batch_size=batch_size,
-            context_length=max_seq_length,
-            device=device,
-        )
-        val_logits = model(val_input_ids)
-        val_loss = cross_entropy_loss(val_logits, val_target_ids)
+        for input_ids, target_ids in zip(val_input_ids, val_target_ids):
+            batch_logits = model(input_ids)
+            batch_loss = cross_entropy_loss(batch_logits, target_ids)
+            total_loss += batch_loss.item()
+    val_loss = total_loss / len(val_input_ids)
     return val_loss
 
 
@@ -216,13 +282,21 @@ def main():
     np.random.seed(args.seed)
     print(f"Arguments: {args}")
 
+    device = "cuda:0" if torch.cuda.is_available() else "cpu"
+    print(f"using device: {device}")
+
     print("loading data...")
     tokenizer = BPETokenizer(vocab={}, merges=[], special_tokens=[END_OF_TEXT])
     train_data = get_tokens(args.train_data, tokenizer)
     val_data = get_tokens(args.val_data, tokenizer)
+    val_input_ids, val_target_ids = load_eval_data(
+        x=val_data,
+        eval_batch_size=args.batch_size,
+        context_length=args.max_seq_length,
+        device=device,
+        num_batches=10,
+    )
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"using device: {device}")
     model = Transformer(
         vocab_size=50257,
         num_layers=args.num_layers,
@@ -287,16 +361,14 @@ def main():
             print(f"Saved checkpoint to {checkpoint_path}")
 
         if (epoch + 1) % args.eval_interval == 0:
-            val_loss: torch.Tensor = eval(
-                model, val_data, args.batch_size, args.max_seq_length, device
-            )
+            val_loss = eval(model, val_input_ids, val_target_ids)
             print(
                 f"Epoch {epoch+1}, "
                 f"Training Loss: {loss.item():.4f}, "
-                f"Validation Loss: {val_loss.item():.4f}"
+                f"Validation Loss: {val_loss:.4f}"
             )
             model.train()
-            loss_map[epoch + 1] = (loss.item(), val_loss.item())
+            loss_map[epoch + 1] = (loss.item(), val_loss)
 
     loss_map_path = os.path.join(args.log_dir, "loss_map.csv")
     save_loss_map(loss_map, loss_map_path)

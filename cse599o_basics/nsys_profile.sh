@@ -24,6 +24,11 @@ for context_length in $context_lengths; do
         --skip_backward \
         --context_length $context_length > $profile_dir/small_${context_length}context.log 2>&1
 
+    # if context_length is over 512, skip large model due to OOM
+    if [ $context_length -gt 512 ]; then
+        continue
+    fi
+
     uv run nsys profile -o $profile_dir/large_${context_length}context \
         python nsys_profile.py \
         --d_model 1280 \
@@ -46,6 +51,11 @@ for context_length in $context_lengths; do
         --skip_optim \
         --context_length $context_length > $profile_dir/small_${context_length}context.log 2>&1
 
+    # if context_length is over 256, skip large model due to OOM
+    if [ $context_length -gt 256 ]; then
+        continue
+    fi
+
     uv run nsys profile -o $profile_dir/large_${context_length}context \
         python nsys_profile.py \
         --d_model 1280 \
@@ -66,6 +76,11 @@ for context_length in $context_lengths; do
         --num_layers 12 \
         --num_heads 12 \
         --context_length $context_length > $profile_dir/small_${context_length}context.log 2>&1
+
+    # if context_length is over 256, skip large model due to OOM
+    if [ $context_length -gt 256 ]; then
+        continue
+    fi
 
     uv run nsys profile -o $profile_dir/large_${context_length}context \
         python nsys_profile.py \

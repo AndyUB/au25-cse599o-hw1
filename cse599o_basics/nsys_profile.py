@@ -1,6 +1,7 @@
 import torch
 import einx
 import torch.cuda.nvtx as nvtx
+from argparse import ArgumentParser
 
 from transformer import softmax, Transformer
 from benchmark import init_model, gen_batch
@@ -103,8 +104,8 @@ def nsys_main():
     parser.add_argument("--context_length", type=int, required=True)
     parser.add_argument("--batch_size", type=int, default=4)
 
-    parser.add_argument("--warmup_steps", type=int, default=1)
-    parser.add_argument("--benchmark_steps", type=int, default=1)
+    parser.add_argument("--warmup_steps", type=int, default=5)
+    parser.add_argument("--benchmark_steps", type=int, default=10)
     parser.add_argument("--skip_backward", action="store_true")
     parser.add_argument("--skip_optim", action="store_true")
     args = parser.parse_args()
@@ -161,3 +162,7 @@ def nsys_main():
             skip_backward=skip_backward,
             skip_optim=skip_optim,
         )
+
+
+if __name__ == "__main__":
+    nsys_main()

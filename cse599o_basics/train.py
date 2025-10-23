@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 
 from tokenizer import BPETokenizer, END_OF_TEXT
 from transformer import Transformer
-from training import (
+from util import (
     AdamW,
     load_data,
     lr_cosine_schedule,

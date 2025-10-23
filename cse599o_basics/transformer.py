@@ -312,6 +312,7 @@ class MultiHeadSelfAttention(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
+        attn_fn = None,
     ):
         """
         Construct the Multi-Head Self-Attention (MHSA) module.
@@ -319,8 +320,12 @@ class MultiHeadSelfAttention(torch.nn.Module):
         Args:
             d_model (int): Hidden dimension of the model.
             num_heads (int): Number of attention heads.
+            max_seq_len (int = 2048): Maximum sequence length.
+            theta (float = 10_000): Theta value for RoPE.
             device (torch.device | None = None): Device to store the parameters on.
             dtype (torch.dtype | None = None): Data type of the parameters.
+            attn_fn (callable | None = None): Attention function to use.
+                If None, use the default scaled dot-product attention.
         """
 
         super().__init__()
@@ -339,6 +344,8 @@ class MultiHeadSelfAttention(torch.nn.Module):
             max_seq_len=max_seq_len,
             device=device,
         )
+
+        self.attn_fn = attn_fn or scaled_dot_product_attention
 
     def forward(
         self,
@@ -382,7 +389,7 @@ class MultiHeadSelfAttention(torch.nn.Module):
             torch.ones((seq_len, seq_len), device=x.device, dtype=torch.bool),
             diagonal=0,
         )  # (seq_len, seq_len)
-        attn_output = scaled_dot_product_attention(
+        attn_output = self.attn_fn(
             q, k, v, mask=mask
         )  # (..., num_heads, seq_len, d_head)
         attn_output = torch.transpose(
@@ -405,6 +412,7 @@ class TransformerBlock(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
+        attn_fn = None,
     ):
         """
         Construct a Transformer block.
@@ -417,6 +425,8 @@ class TransformerBlock(torch.nn.Module):
             theta (float = 10_000): Theta value for RoPE.
             device (torch.device | None = None): Device to store the parameters on.
             dtype (torch.dtype | None = None): Data type of the parameters.
+            attn_fn (callable | None = None): Attention function to use.
+                If None, use the default scaled dot-product attention.
         """
 
         super().__init__()
@@ -428,6 +438,7 @@ class TransformerBlock(torch.nn.Module):
             theta=theta,
             device=device,
             dtype=dtype,
+            attn_fn=attn_fn,
         )
         self.ln2 = RMSNorm(d_model, device=device, dtype=dtype)
         self.ffn = SwiGLU(d_model, d_ff, device=device, dtype=dtype)
@@ -467,6 +478,7 @@ class Transformer(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
+        attn_fn = None,
     ):
         """
         Construct a Transformer model.
@@ -482,6 +494,8 @@ class Transformer(torch.nn.Module):
             theta (float = 10_000): Theta value for RoPE.
             device (torch.device | None = None): Device to store the parameters on.
             dtype (torch.dtype | None = None): Data type of the parameters.
+            attn_fn (callable | None = None): Attention function to use.
+                If None, use the default scaled dot-product attention.
         """
 
         super().__init__()
@@ -498,6 +512,7 @@ class Transformer(torch.nn.Module):
                     theta=theta,
                     device=device,
                     dtype=dtype,
+                    attn_fn=attn_fn,
                 )
                 for _ in range(num_layers)
             ]

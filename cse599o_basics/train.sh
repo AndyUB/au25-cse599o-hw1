@@ -14,7 +14,7 @@ for lr in $lrs; do
     CKPT_DIR=../ckpt/10/lr_$lr
     mkdir -p $LOG_DIR
     mkdir -p $CKPT_DIR
-    uv run main.py --train_data $DATA_DIR/TinyStoriesV2-GPT4-train.txt \
+    uv run train.py --train_data $DATA_DIR/TinyStoriesV2-GPT4-train.txt \
         --val_data $DATA_DIR/TinyStoriesV2-GPT4-valid.txt \
         --log_dir $LOG_DIR \
         --checkpoint_dir $CKPT_DIR \
@@ -40,7 +40,7 @@ for lr_min_max in $lr_min_maxs; do
     CKPT_DIR=../ckpt/10/warmup_${warmup_iters}_cosine_${cosine_iters}_lr_$lr_min_max
     mkdir -p $LOG_DIR
     mkdir -p $CKPT_DIR
-    uv run main.py --train_data $DATA_DIR/TinyStoriesV2-GPT4-train.txt \
+    uv run train.py --train_data $DATA_DIR/TinyStoriesV2-GPT4-train.txt \
         --val_data $DATA_DIR/TinyStoriesV2-GPT4-valid.txt \
         --log_dir $LOG_DIR \
         --seed $seed \

@@ -2,7 +2,7 @@ from argparse import ArgumentParser
 import torch
 
 from inference import get_default_model
-from main import get_tokens, load_eval_data, eval
+from train import get_tokens, load_eval_data, eval
 from tokenizer import BPETokenizer, END_OF_TEXT
 
 

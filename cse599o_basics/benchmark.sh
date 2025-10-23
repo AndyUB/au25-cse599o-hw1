@@ -21,8 +21,11 @@ uv run benchmark.py \
 
 breakdown_context_lengths="128 256 512 1024 2048"
 
+BREAKDOWN_DIR=$BENCHMARK_DIR/breakdown
+mkdir -p $BREAKDOWN_DIR
+
 for context_length in $breakdown_context_lengths; do
-    breakdown_dir=$BENCHMARK_DIR/${context_length}context
+    breakdown_dir=$BREAKDOWN_DIR/${context_length}context
     mkdir -p $breakdown_dir
     uv run ffn_attention_breakdown.py \
         --output_file $breakdown_dir/breakdown_small.csv \

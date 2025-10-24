@@ -1,0 +1,2 @@
+Arguments: Namespace(output_dir='../bench/memory_profile/inference/full', d_model=1280, d_ff=5120, num_layers=36, num_heads=20, context_length=512, batch_size=4, warmup_steps=5, benchmark_steps=10, skip_backward=True, skip_optim=False, record_all=True)
+skip_backward=True,skip_optim=True

@@ -1,0 +1,41 @@
+Arguments: Namespace(output_dir='../bench/memory_profile/training/large_512context', d_model=1280, d_ff=5120, num_layers=36, num_heads=20, context_length=512, batch_size=4, warmup_steps=5, benchmark_steps=10, skip_backward=False, skip_optim=False)
+skip_backward=False,skip_optim=False
+Traceback (most recent call last):
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/memory_profile.py", line 121, in <module>
+    memory_main()
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/memory_profile.py", line 92, in memory_main
+    step(
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/memory_profile.py", line 27, in step
+    logits = model(input_ids)
+             ^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/transformer.py", line 540, in forward
+    x = layer(x)
+        ^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/transformer.py", line 462, in forward
+    attn_output = self.attn(n1)
+                  ^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/transformer.py", line 392, in forward
+    attn_output = self.attn_fn(
+                  ^^^^^^^^^^^^^
+  File "/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/transformer.py", line 294, in scaled_dot_product_attention
+    attention_scores: torch.Tensor = einx.dot(
+                                     ^^^^^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 80.00 MiB. GPU 0 has a total capacity of 23.46 GiB of which 65.88 MiB is free. Including non-PyTorch memory, this process has 23.39 GiB memory in use. Of the allocated memory 19.92 GiB is allocated by PyTorch, and 3.27 GiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

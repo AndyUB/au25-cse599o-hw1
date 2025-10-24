@@ -1,0 +1,11 @@
+WARNING: GPU initialization took too long. Please run the NVIDIA persistence daemon.
+For more information, visit the following page:
+https://docs.nvidia.com/deploy/driver-persistence/index.html#persistence-daemon
+
+Arguments: Namespace(d_model=768, d_ff=3072, num_layers=12, num_heads=12, context_length=256, batch_size=4, warmup_steps=5, benchmark_steps=10, skip_backward=False, skip_optim=True)
+skip_backward=False,skip_optim=True
+Collecting data...
+Generating '/tmp/nsys-report-1bab.qdstrm'
+[1/1] [0%                          ] small_256context.nsys-rep[1/1] [0%                          ] small_256context.nsys-rep[1/1] [10%                         ] small_256context.nsys-rep[1/1] [9%                          ] small_256context.nsys-rep[1/1] [10%                         ] small_256context.nsys-rep[1/1] [11%                         ] small_256context.nsys-rep[1/1] [9%                          ] small_256context.nsys-rep[1/1] [10%                         ] small_256context.nsys-rep[1/1] [11%                         ] small_256context.nsys-rep[1/1] [12%                         ] small_256context.nsys-rep[1/1] [13%                         ] small_256context.nsys-rep[1/1] [14%                         ] small_256context.nsys-rep[1/1] [=16%                        ] small_256context.nsys-rep[1/1] [=17%                        ] small_256context.nsys-rep[1/1] [==20%                       ] small_256context.nsys-rep[1/1] [===24%                      ] small_256context.nsys-rep[1/1] [====25%                     ] small_256context.nsys-rep[1/1] [====26%                     ] small_256context.nsys-rep[1/1] [======33%                   ] small_256context.nsys-rep[1/1] [========41%                 ] small_256context.nsys-rep[1/1] [===========50%              ] small_256context.nsys-rep[1/1] [=============59%            ] small_256context.nsys-rep[1/1] [================68%         ] small_256context.nsys-rep[1/1] [=================72%        ] small_256context.nsys-rep[1/1] [========================100%] small_256context.nsys-rep[1/1] [========================100%] small_256context.nsys-rep
+Generated:
+	/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/../bench/nsys_profile/fwd_bwd/small_256context.nsys-rep

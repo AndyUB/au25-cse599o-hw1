@@ -1,0 +1,3 @@
+Arguments: Namespace(output_file='../bench/breakdown/2048context/breakdown_large.csv', d_model=1280, num_heads=20, d_ff=5120, context_length=2048, batch_size=4, warmup_steps=5, benchmark_steps=10)
+Input size: torch.Size([4, 2048, 1280]), num_heads: 20, d_head: 64, d_ff: 5120, Attn FLOPs: 193273528320, projs FLOPs: 107374182400, QK FLOPs: 42949672960, ProbsV FLOPs: 42949672960, FFN FLOPs: 322122547200
+Input size: torch.Size([4, 2048, 1280]), num_heads: 20, d_head: 64, d_ff: 5120, Attn FLOPs: 193273528320, projs FLOPs: 107374182400, QK FLOPs: 42949672960, ProbsV FLOPs: 42949672960, FFN FLOPs: 322122547200

@@ -1,0 +1,11 @@
+WARNING: GPU initialization took too long. Please run the NVIDIA persistence daemon.
+For more information, visit the following page:
+https://docs.nvidia.com/deploy/driver-persistence/index.html#persistence-daemon
+
+Arguments: Namespace(d_model=768, d_ff=3072, num_layers=12, num_heads=12, context_length=128, batch_size=4, warmup_steps=5, benchmark_steps=10, skip_backward=True, skip_optim=False)
+skip_backward=True,skip_optim=True
+Collecting data...
+Generating '/tmp/nsys-report-e86e.qdstrm'
+[1/1] [0%                          ] small_128context.nsys-rep[1/1] [0%                          ] small_128context.nsys-rep[1/1] [=15%                        ] small_128context.nsys-rep[1/1] [=16%                        ] small_128context.nsys-rep[1/1] [=17%                        ] small_128context.nsys-rep[1/1] [==18%                       ] small_128context.nsys-rep[1/1] [==19%                       ] small_128context.nsys-rep[1/1] [==20%                       ] small_128context.nsys-rep[1/1] [===22%                      ] small_128context.nsys-rep[1/1] [===23%                      ] small_128context.nsys-rep[1/1] [===24%                      ] small_128context.nsys-rep[1/1] [====25%                     ] small_128context.nsys-rep[1/1] [====26%                     ] small_128context.nsys-rep[1/1] [====27%                     ] small_128context.nsys-rep[1/1] [====28%                     ] small_128context.nsys-rep[1/1] [=====30%                    ] small_128context.nsys-rep[1/1] [======33%                   ] small_128context.nsys-rep[1/1] [=======38%                  ] small_128context.nsys-rep[1/1] [=========44%                ] small_128context.nsys-rep[1/1] [===========51%              ] small_128context.nsys-rep[1/1] [==============63%           ] small_128context.nsys-rep[1/1] [=================73%        ] small_128context.nsys-rep[1/1] [=================74%        ] small_128context.nsys-rep[1/1] [========================100%] small_128context.nsys-rep[1/1] [========================100%] small_128context.nsys-rep
+Generated:
+	/homes/iws/yhruan22/au25-cse599o-hw1/cse599o_basics/../bench/nsys_profile/inference/small_128context.nsys-rep

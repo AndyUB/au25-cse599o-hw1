@@ -1,0 +1,9 @@
+Arguments: Namespace(output_file='../bench/small_1024.csv', d_model=768, d_ff=3072, num_layers=12, num_heads=12, context_length=1024, warmup_steps=5, benchmark_steps=10, disable_fwd_timing=False, disable_bwd_timing=False, disable_loss_timing=False, disable_optim_timing=False, skip_loss=False, skip_backward=False, skip_optim=False)
+Timing settings: fwd=True,bwd=True,loss=True,optim=True
+Training step settings: skip_loss=False,skip_backward=False,skip_optim=False
+Benchmark Results:
+Fwd: mean=183.7513 ms, std=0.4278 ms
+Bwd: mean=414.8332 ms, std=0.9730 ms
+Loss: mean=8.5955 ms, std=0.0092 ms
+Optim: mean=45.6108 ms, std=0.0093 ms
+Total: mean=652.8224 ms, std=1.1744 ms

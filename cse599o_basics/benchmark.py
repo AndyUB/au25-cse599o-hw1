@@ -199,6 +199,7 @@ def benchmark(
         )
         time_breakdown, total_time = benchmark_step(
             model,
+            optimizer,
             input_ids,
             target_ids,
             time_forward=time_forward,
@@ -258,7 +259,9 @@ def log_benchmark_results(times: list[tuple[TimeBreakdown, float]], output_file:
                 if time_breakdown.optim_time is not None
                 else "N/A"
             )
-            f.write(f"{step+1},{fwd_time},{bwd_time},{loss_time},{optim_time},{total_time:.4f}\n")
+            f.write(
+                f"{step+1},{fwd_time},{bwd_time},{loss_time},{optim_time},{total_time:.4f}\n"
+            )
 
 
 def benchmark_main():
@@ -338,7 +341,7 @@ def benchmark_main():
     )
     log_benchmark_results(breakdown, args.output_file)
 
-    fwd_stats, bwd_stats, loss_stats, total_stats = stats
+    fwd_stats, bwd_stats, loss_stats, optim_stats, total_stats = stats
     print("Benchmark Results:")
     if time_forward:
         fwd_mean, fwd_std = fwd_stats

@@ -1,0 +1,5 @@
+Arguments: Namespace(model_checkpoint='../ckpt/best.pt', prompt='Once upon a time', max_tokens=512, temperature=1.0, top_p=1.0)
+Once upon a time, there was a little dog named Spot. Spot liked to get ready for a new day. One day, while Spot was rushing to a big party, he saw a cage with a lock on it.
+Spot ran inside to find his food. He found his favorite food, cheese, and a big cake. Spot ate and ate until he heard a loud splash. It was his friend, Cat, coming to visit him.
+From that day on, Spot and Cat decided to play a fun game of hide and seek. They laughed and had lots of fun together. Spot was a clever dog who loved to help Cat with the chores. At the end of the day, they were very tired but happy.
+<|endoftext|>

@@ -1,0 +1,15 @@
+Arguments: Namespace(train_data='../data/TinyStoriesV2-GPT4-train.txt', val_data='../data/TinyStoriesV2-GPT4-valid.txt', log_dir='../logs/10/resume_warmup_500_cosine_5000_lr_1.5e-3_5e-5', checkpoint_dir='../ckpt/10/resume_warmup_500_cosine_5000_lr_1.5e-3_5e-5', checkpoint_interval=1000, checkpoint_resume_path='../ckpt/10/warmup_500_cosine_4500_lr_1.5e-3_5e-5/ckpt4000.pt', eval_interval=100, num_layers=4, d_model=512, num_heads=16, d_ff=1344, max_seq_length=256, batch_size=32, num_epochs=5000, rope_theta=10000, adamw_beta1=0.9, adamw_beta2=0.999, adamw_eps=1e-08, adamw_weight_decay=0.01, lr=0.001, enable_lr_schedule=True, lr_max=0.0015, lr_min=5e-05, warmup_iters=500, cosine_iters=5000, max_grad_norm=1.0, seed=42)
+using device: cuda:0
+loading data...
+Resuming training from checkpoint ../ckpt/10/warmup_500_cosine_4500_lr_1.5e-3_5e-5/ckpt4000.pt at epoch 4000
+Epoch 4100, Training Loss: 1.6346, Validation Loss: 1.6533
+Epoch 4200, Training Loss: 1.6073, Validation Loss: 1.6498
+Epoch 4300, Training Loss: 1.5496, Validation Loss: 1.6445
+Epoch 4400, Training Loss: 1.5676, Validation Loss: 1.6404
+Epoch 4500, Training Loss: 1.5323, Validation Loss: 1.6359
+Epoch 4600, Training Loss: 1.5635, Validation Loss: 1.6340
+Epoch 4700, Training Loss: 1.6103, Validation Loss: 1.6310
+Epoch 4800, Training Loss: 1.7274, Validation Loss: 1.6275
+Epoch 4900, Training Loss: 1.4977, Validation Loss: 1.6263
+Saved checkpoint to ../ckpt/10/resume_warmup_500_cosine_5000_lr_1.5e-3_5e-5/ckpt5000.pt
+Epoch 5000, Training Loss: 1.5614, Validation Loss: 1.6246

@@ -1,0 +1,5 @@
+Arguments: Namespace(model_checkpoint='../ckpt/best.pt', prompt='Once upon a time', max_tokens=512, temperature=0.01, top_p=1.0)
+Once upon a time, there was a little girl named Lily. She loved to play with her toys and make up stories. One day, she found a big box in her room. She was very happy and wanted to open it.
+Lily opened the box and found a new toy. It was a small, soft, and soft bed. She played with it all day. She was so happy with her new toy.
+But then, something unexpected happened. The toy started to talk! It said, "Hello, Lily! I am a magic toy. I can make your dreams come true." Lily was very surprised. She did not know that the magic toy could talk. She played with the magic toy all day and had lots of fun.
+<|endoftext|>

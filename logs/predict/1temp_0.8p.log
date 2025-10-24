@@ -1,0 +1,5 @@
+Arguments: Namespace(model_checkpoint='../ckpt/best.pt', prompt='Once upon a time', max_tokens=512, temperature=1.0, top_p=0.8)
+Once upon a time, there was a little dog named Spot. Spot was a very happy dog. He loved to run and play in the park. One day, Spot saw a big tree with lots of fruit. He wanted to eat the fruit, but it was too high for him to reach.
+Spot's friend, a bird named Tweet, saw him. Tweet said, "Spot, I can help you get the fruit." Tweet was happy to help. She flew up and got the fruit for Spot. Spot was very happy and said, "Thank you, Tweet!"
+Together, Spot and Tweet took the fruit to the big tree. They picked it and shared it. They were very happy and played together all day. From that day on, Spot and Tweet had lots of fun in the park.
+<|endoftext|>

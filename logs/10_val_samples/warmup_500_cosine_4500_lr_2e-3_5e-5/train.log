@@ -1,0 +1,59 @@
+Arguments: Namespace(train_data='../data/TinyStoriesV2-GPT4-train.txt', val_data='../data/TinyStoriesV2-GPT4-valid.txt', log_dir='../logs/10/warmup_500_cosine_4500_lr_2e-3_5e-5', checkpoint_dir='../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5', checkpoint_interval=1000, checkpoint_resume_path='', eval_interval=100, num_layers=4, d_model=512, num_heads=16, d_ff=1344, max_seq_length=256, batch_size=32, num_epochs=5000, rope_theta=10000, adamw_beta1=0.9, adamw_beta2=0.999, adamw_eps=1e-08, adamw_weight_decay=0.01, lr=0.001, enable_lr_schedule=True, lr_max=0.002, lr_min=5e-05, warmup_iters=500, cosine_iters=4500, max_grad_norm=1.0, seed=599)
+using device: cuda:0
+loading data...
+Starting training from epoch 0
+Epoch 100, Training Loss: 4.6187, Validation Loss: 4.5323
+Epoch 200, Training Loss: 3.2183, Validation Loss: 3.2212
+Epoch 300, Training Loss: 2.7956, Validation Loss: 2.8205
+Epoch 400, Training Loss: 2.6171, Validation Loss: 2.6434
+Epoch 500, Training Loss: 2.6400, Validation Loss: 2.5463
+Epoch 600, Training Loss: 2.4401, Validation Loss: 2.4531
+Epoch 700, Training Loss: 2.4496, Validation Loss: 2.3694
+Epoch 800, Training Loss: 2.2547, Validation Loss: 2.2881
+Epoch 900, Training Loss: 2.3067, Validation Loss: 2.2327
+Saved checkpoint to ../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5/ckpt1000.pt
+Epoch 1000, Training Loss: 2.2682, Validation Loss: 2.1850
+Epoch 1100, Training Loss: 2.0971, Validation Loss: 2.1460
+Epoch 1200, Training Loss: 2.1070, Validation Loss: 2.1083
+Epoch 1300, Training Loss: 1.9689, Validation Loss: 2.0737
+Epoch 1400, Training Loss: 2.0542, Validation Loss: 2.0551
+Epoch 1500, Training Loss: 1.9746, Validation Loss: 2.0207
+Epoch 1600, Training Loss: 2.0260, Validation Loss: 1.9942
+Epoch 1700, Training Loss: 1.9416, Validation Loss: 1.9681
+Epoch 1800, Training Loss: 1.9239, Validation Loss: 1.9439
+Epoch 1900, Training Loss: 1.8263, Validation Loss: 1.9251
+Saved checkpoint to ../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5/ckpt2000.pt
+Epoch 2000, Training Loss: 1.9422, Validation Loss: 1.9023
+Epoch 2100, Training Loss: 1.8475, Validation Loss: 1.8853
+Epoch 2200, Training Loss: 1.8319, Validation Loss: 1.8698
+Epoch 2300, Training Loss: 1.7067, Validation Loss: 1.8510
+Epoch 2400, Training Loss: 1.7464, Validation Loss: 1.8340
+Epoch 2500, Training Loss: 1.7151, Validation Loss: 1.8160
+Epoch 2600, Training Loss: 1.7659, Validation Loss: 1.8003
+Epoch 2700, Training Loss: 1.8479, Validation Loss: 1.7879
+Epoch 2800, Training Loss: 1.7299, Validation Loss: 1.7729
+Epoch 2900, Training Loss: 1.7169, Validation Loss: 1.7639
+Saved checkpoint to ../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5/ckpt3000.pt
+Epoch 3000, Training Loss: 1.7197, Validation Loss: 1.7481
+Epoch 3100, Training Loss: 1.7300, Validation Loss: 1.7364
+Epoch 3200, Training Loss: 1.7162, Validation Loss: 1.7254
+Epoch 3300, Training Loss: 1.7466, Validation Loss: 1.7136
+Epoch 3400, Training Loss: 1.7704, Validation Loss: 1.7037
+Epoch 3500, Training Loss: 1.5589, Validation Loss: 1.6947
+Epoch 3600, Training Loss: 1.7253, Validation Loss: 1.6862
+Epoch 3700, Training Loss: 1.6936, Validation Loss: 1.6796
+Epoch 3800, Training Loss: 1.5371, Validation Loss: 1.6736
+Epoch 3900, Training Loss: 1.6018, Validation Loss: 1.6674
+Saved checkpoint to ../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5/ckpt4000.pt
+Epoch 4000, Training Loss: 1.6828, Validation Loss: 1.6626
+Epoch 4100, Training Loss: 1.6924, Validation Loss: 1.6583
+Epoch 4200, Training Loss: 1.6770, Validation Loss: 1.6557
+Epoch 4300, Training Loss: 1.6446, Validation Loss: 1.6532
+Epoch 4400, Training Loss: 1.6390, Validation Loss: 1.6513
+Epoch 4500, Training Loss: 1.6074, Validation Loss: 1.6494
+Epoch 4600, Training Loss: 1.5375, Validation Loss: 1.6480
+Epoch 4700, Training Loss: 1.6396, Validation Loss: 1.6466
+Epoch 4800, Training Loss: 1.6010, Validation Loss: 1.6453
+Epoch 4900, Training Loss: 1.5475, Validation Loss: 1.6450
+Saved checkpoint to ../ckpt/10/warmup_500_cosine_4500_lr_2e-3_5e-5/ckpt5000.pt
+Epoch 5000, Training Loss: 1.6432, Validation Loss: 1.6430

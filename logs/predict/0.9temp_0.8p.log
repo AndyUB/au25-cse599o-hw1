@@ -1,0 +1,7 @@
+Arguments: Namespace(model_checkpoint='../ckpt/best.pt', prompt='Once upon a time', max_tokens=512, temperature=0.9, top_p=0.8)
+Once upon a time, there was a little boy named Tim. Tim had a toy box with a label on it. He liked to play with it every day. One day, Tim's friend, Sam, came to play. Sam saw the label and wanted to play too.
+"Can I play with your toy?" asked Tim.
+"No, it's mine!" said Sam.
+Tim was sad, but he didn't give up. He kept playing with his toy box. Then, Tim had an idea. He decided to bury his toy box in the box. He dug a hole and put the box in it. Then, he covered it with dirt and threw it in the trash.
+The toy box was now all clean and shiny. Tim was very happy. He played with his toy box all day. He loved his toy box very much.
+<|endoftext|>

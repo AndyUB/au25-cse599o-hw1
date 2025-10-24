@@ -1,0 +1,59 @@
+Arguments: Namespace(train_data='../data/TinyStoriesV2-GPT4-train.txt', val_data='../data/TinyStoriesV2-GPT4-valid.txt', log_dir='../logs/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3', checkpoint_dir='../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3', checkpoint_interval=1000, checkpoint_resume_path='', eval_interval=100, num_layers=4, d_model=512, num_heads=16, d_ff=1344, max_seq_length=256, batch_size=32, num_epochs=5000, rope_theta=10000, adamw_beta1=0.9, adamw_beta2=0.999, adamw_eps=1e-08, adamw_weight_decay=0.01, lr=0.001, enable_lr_schedule=True, lr_max=0.0015, lr_min=0.001, warmup_iters=100, cosine_iters=4500, max_grad_norm=1.0, seed=599)
+using device: cuda:0
+loading data...
+Starting training from epoch 0
+Epoch 100, Training Loss: 3.6274, Validation Loss: 3.5715
+Epoch 200, Training Loss: 2.8971, Validation Loss: 2.9138
+Epoch 300, Training Loss: 2.6143, Validation Loss: 2.6478
+Epoch 400, Training Loss: 2.5129, Validation Loss: 2.5245
+Epoch 500, Training Loss: 2.4990, Validation Loss: 2.4195
+Epoch 600, Training Loss: 2.3236, Validation Loss: 2.3396
+Epoch 700, Training Loss: 2.3552, Validation Loss: 2.2808
+Epoch 800, Training Loss: 2.1869, Validation Loss: 2.2171
+Epoch 900, Training Loss: 2.2367, Validation Loss: 2.1705
+Saved checkpoint to ../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3/ckpt1000.pt
+Epoch 1000, Training Loss: 2.2310, Validation Loss: 2.1369
+Epoch 1100, Training Loss: 2.0536, Validation Loss: 2.1047
+Epoch 1200, Training Loss: 2.0702, Validation Loss: 2.0760
+Epoch 1300, Training Loss: 1.9327, Validation Loss: 2.0514
+Epoch 1400, Training Loss: 2.0447, Validation Loss: 2.0303
+Epoch 1500, Training Loss: 1.9614, Validation Loss: 2.0039
+Epoch 1600, Training Loss: 2.0236, Validation Loss: 1.9823
+Epoch 1700, Training Loss: 1.9295, Validation Loss: 1.9604
+Epoch 1800, Training Loss: 1.9286, Validation Loss: 1.9439
+Epoch 1900, Training Loss: 1.8391, Validation Loss: 1.9276
+Saved checkpoint to ../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3/ckpt2000.pt
+Epoch 2000, Training Loss: 1.9548, Validation Loss: 1.9115
+Epoch 2100, Training Loss: 1.8639, Validation Loss: 1.9000
+Epoch 2200, Training Loss: 1.8347, Validation Loss: 1.8879
+Epoch 2300, Training Loss: 1.7491, Validation Loss: 1.8753
+Epoch 2400, Training Loss: 1.7674, Validation Loss: 1.8600
+Epoch 2500, Training Loss: 1.7510, Validation Loss: 1.8494
+Epoch 2600, Training Loss: 1.7982, Validation Loss: 1.8367
+Epoch 2700, Training Loss: 1.8794, Validation Loss: 1.8301
+Epoch 2800, Training Loss: 1.7732, Validation Loss: 1.8137
+Epoch 2900, Training Loss: 1.7635, Validation Loss: 1.8079
+Saved checkpoint to ../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3/ckpt3000.pt
+Epoch 3000, Training Loss: 1.7662, Validation Loss: 1.7976
+Epoch 3100, Training Loss: 1.7884, Validation Loss: 1.7890
+Epoch 3200, Training Loss: 1.7809, Validation Loss: 1.7827
+Epoch 3300, Training Loss: 1.8169, Validation Loss: 1.7714
+Epoch 3400, Training Loss: 1.8353, Validation Loss: 1.7630
+Epoch 3500, Training Loss: 1.6420, Validation Loss: 1.7543
+Epoch 3600, Training Loss: 1.7849, Validation Loss: 1.7491
+Epoch 3700, Training Loss: 1.7751, Validation Loss: 1.7448
+Epoch 3800, Training Loss: 1.6102, Validation Loss: 1.7401
+Epoch 3900, Training Loss: 1.6634, Validation Loss: 1.7316
+Saved checkpoint to ../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3/ckpt4000.pt
+Epoch 4000, Training Loss: 1.7530, Validation Loss: 1.7274
+Epoch 4100, Training Loss: 1.7586, Validation Loss: 1.7236
+Epoch 4200, Training Loss: 1.7426, Validation Loss: 1.7198
+Epoch 4300, Training Loss: 1.7123, Validation Loss: 1.7163
+Epoch 4400, Training Loss: 1.7019, Validation Loss: 1.7095
+Epoch 4500, Training Loss: 1.6796, Validation Loss: 1.7051
+Epoch 4600, Training Loss: 1.5917, Validation Loss: 1.7018
+Epoch 4700, Training Loss: 1.6781, Validation Loss: 1.6966
+Epoch 4800, Training Loss: 1.6713, Validation Loss: 1.6959
+Epoch 4900, Training Loss: 1.5981, Validation Loss: 1.6948
+Saved checkpoint to ../ckpt/10/warmup_100_cosine_4500_lr_1.5e-3_1e-3/ckpt5000.pt
+Epoch 5000, Training Loss: 1.6776, Validation Loss: 1.6878

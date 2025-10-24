@@ -1,0 +1,5 @@
+Arguments: Namespace(model_checkpoint='../ckpt/best.pt', prompt='Once upon a time', max_tokens=512, temperature=1.0, top_p=0.9)
+Once upon a time, there was a little dog named Spot. Spot liked to play in the park with his friends. They liked to run, jump, and roll in the grass.
+One sunny day, Spot found a shiny gold coin on the ground. He picked it up and looked at it. He thought it was very special. He showed it to his friends, and they all wanted to have it too. They played with it for a long time.
+After a while, Spot felt sad. He realized that he should have shared his new silver coin with his friends. He went back to playing with his friends, and they all had fun. Spot learned that it is good to share, and it is important to share with others.
+<|endoftext|>

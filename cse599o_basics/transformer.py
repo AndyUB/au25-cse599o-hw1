@@ -312,7 +312,7 @@ class MultiHeadSelfAttention(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
-        attn_fn = None,
+        attn_fn=None,
     ):
         """
         Construct the Multi-Head Self-Attention (MHSA) module.
@@ -412,7 +412,7 @@ class TransformerBlock(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
-        attn_fn = None,
+        attn_fn=None,
     ):
         """
         Construct a Transformer block.
@@ -478,7 +478,7 @@ class Transformer(torch.nn.Module):
         theta: float = 10_000,
         device: torch.device | None = None,
         dtype: torch.dtype | None = None,
-        attn_fn = None,
+        attn_fn=None,
     ):
         """
         Construct a Transformer model.

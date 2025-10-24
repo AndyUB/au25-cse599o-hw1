@@ -14,6 +14,9 @@ def decode(
     top_p: float = 0.9,
     device: torch.device | None = None,
 ) -> str:
+    if top_p <= 0.0 or top_p > 1.0:
+        raise ValueError("top_p must be in the range (0.0, 1.0]")
+
     END_OF_TEXT_ID = tokenizer.encode(END_OF_TEXT)[0]
     tokens = (
         torch.tensor(tokenizer.encode(prompt), device=device).long().unsqueeze(0)
@@ -27,16 +30,14 @@ def decode(
         probs = softmax(logits, dim=-1)
 
         sorted_probs, sorted_indices = torch.sort(probs, descending=True)
-        cumulative_prob = 0
-        cutoff_index = 0
-        for i in range(sorted_probs.shape[0]):
-            cumulative_prob += sorted_probs[i].item()
-            cutoff_index += 1
-            if cumulative_prob >= top_p:
-                break
-        if cutoff_index < sorted_probs.shape[0]:
-            sorted_probs[cutoff_index:] = 0.0
-        sorted_probs = sorted_probs / torch.sum(sorted_probs)
+        if top_p != 1.0:
+            cumulative_probs = torch.cumsum(sorted_probs, dim=0)
+            indices_to_remove = cumulative_probs >= top_p
+            # Keep first token above the threshold
+            indices_to_remove[1:] = indices_to_remove[:-1].clone()
+            indices_to_remove[0] = False
+            sorted_probs[indices_to_remove] = 0.0
+            sorted_probs = sorted_probs / torch.sum(sorted_probs)
 
         next_token = torch.multinomial(sorted_probs, 1)
         next_token = sorted_indices[next_token]
@@ -55,7 +56,7 @@ def get_default_model(device: torch.device) -> Transformer:
         d_model=512,
         num_heads=16,
         d_ff=1344,
-        context_length=256,
+        context_length=2048,
         theta=10000,
         device=torch.device(device),
     )

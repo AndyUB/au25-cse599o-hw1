@@ -8,6 +8,20 @@ if [[ "$1" == "--clean" ]]; then
     rm -rf $MEMORY_PROFILE_DIR/*
 fi
 
+context_length=512
+profile_dir=$MEMORY_PROFILE_DIR/inference/full
+mkdir -p $profile_dir
+
+uv run python memory_profile.py \
+    --output_dir $profile_dir\
+    --d_model 1280 \
+    --d_ff 5120 \
+    --num_layers 36 \
+    --num_heads 20 \
+    --skip_backward \
+    --record_all \
+    --context_length $context_length > $profile_dir/large_${context_length}context.log 2>&1
+
 context_lengths="128 256 512"
 
 for context_length in $context_lengths; do

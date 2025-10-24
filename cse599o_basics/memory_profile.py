@@ -20,7 +20,11 @@ def step(
         assert optimizer is not None
         optimizer.zero_grad()
 
-    logits = model(input_ids)
+    if skip_backward:
+        with torch.no_grad():
+            logits = model(input_ids)
+    else:
+        logits = model(input_ids)
 
     if skip_backward:
         return
@@ -48,6 +52,7 @@ def memory_main():
     parser.add_argument("--benchmark_steps", type=int, default=10)
     parser.add_argument("--skip_backward", action="store_true")
     parser.add_argument("--skip_optim", action="store_true")
+    parser.add_argument("--record_all", action="store_true")
     args = parser.parse_args()
     print(f"Arguments: {args}")
 
@@ -60,6 +65,10 @@ def memory_main():
 
     assert torch.cuda.is_available(), "Memory profiling requires a CUDA GPU"
     device = torch.device("cuda")
+
+    if args.record_all:
+        torch.cuda.memory._record_memory_history(max_entries=1000000)
+
     model = init_model(
         d_model=args.d_model,
         d_ff=args.d_ff,
@@ -93,6 +102,21 @@ def memory_main():
             skip_backward=skip_backward,
             skip_optim=skip_optim,
         )
+
+    if args.record_all:
+        for i in range(args.benchmark_steps):
+            step(
+                model,
+                optimizer,
+                input_ids,
+                target_ids,
+                skip_backward=skip_backward,
+                skip_optim=skip_optim,
+            )
+        torch.cuda.memory._dump_snapshot(f"{output_dir}/memory_snapshot.pickle")
+        torch.cuda.memory._record_memory_history(enabled=None)
+        return
+
     for i in range(args.benchmark_steps):
         torch.cuda.memory._record_memory_history(max_entries=1000000)
         torch.cuda.reset_peak_memory_stats()

@@ -1,5 +1,9 @@
 import os
+import torch
 from argparse import ArgumentParser
+
+from inference import get_default_model
+from util import AdamW, load_checkpoint
 
 
 def split_ckpt(ckpt_path: str, output_dir: str) -> None:
@@ -88,20 +92,79 @@ def test_split_merge(ckpt_path: str, split_dir: str) -> None:
     print("Test passed: Merged file matches the original")
 
 
+def extract_model_from_checkpoint(ckpt_path: str, model_path: str) -> None:
+    """
+    Extract the model state dictionary from a checkpoint file,
+    and save it to the specified model path.
+
+    Args:
+        ckpt_path (str): Path to the checkpoint file.
+        model_path (str): Path to save the model state dictionary.
+    """
+    if not os.path.isfile(ckpt_path):
+        raise FileNotFoundError(f"Checkpoint file {ckpt_path} does not exist.")
+
+    checkpoint = torch.load(ckpt_path)
+    model_state_dict = checkpoint["model_state_dict"]
+    torch.save(model_state_dict, model_path)
+    print(f"Extracted model state dict saved to {model_path}")
+
+    model_ckpt = get_default_model(device=torch.device("cpu"))
+    optimizer = AdamW(
+        model_ckpt.parameters(),
+        lr=1e-3,
+        betas=(0.9, 0.999),
+        eps=1e-8,
+        weight_decay=0.01,
+    )
+    load_checkpoint(ckpt_path, model_ckpt, optimizer)
+
+    model = get_default_model(device=torch.device("cpu"))
+    model.load_state_dict(torch.load(model_path))
+
+    mismatched_params = []
+    for name, param in model.named_parameters():
+        ckpt_param = model_ckpt.state_dict()[name]
+        if not torch.equal(param, ckpt_param):
+            mismatched_params.append(name)
+    if mismatched_params:
+        print(f"Test failed! Mismatched parameters: {mismatched_params}.")
+    else:
+        print("Test passed! Extracted model matches the checkpoint model.")
+
+
 if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument(
-        "--mode", type=str, choices=["split", "merge", "test"], required=True
+        "--mode",
+        type=str,
+        choices=["split", "merge", "test", "extract_model"],
+        required=True,
     )
     parser.add_argument(
         "--ckpt_path", type=str, required=True, help="Path to the checkpoint file."
     )
     parser.add_argument(
-        "--chunk_dir", type=str, required=True, help="Directory of chunk files"
+        "--chunk_dir", type=str, required=False, help="Directory of chunk files"
+    )
+    parser.add_argument(
+        "--model_path",
+        type=str,
+        required=False,
+        help="Path to save the extracted model state dictionary",
     )
     args = parser.parse_args()
 
-    if args.mode == "split":
+    if args.mode == "extract_model":
+        if not args.model_path:
+            raise ValueError("--model_path is required for extract_model mode")
+    else:
+        if not args.chunk_dir:
+            raise ValueError(f"--chunk_dir is required for {args.mode} mode")
+
+    if args.mode == "extract_model":
+        extract_model_from_checkpoint(args.ckpt_path, args.model_path)
+    elif args.mode == "split":
         split_ckpt(args.ckpt_path, args.chunk_dir)
     elif args.mode == "merge":
         merge_ckpt(args.chunk_dir, args.ckpt_path)
